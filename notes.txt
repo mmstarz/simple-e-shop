@@ -1,0 +1,727 @@
+https://pinterest.github.io/gestalt/#/
+
+###############################################
+        CONNECT MONGO TO STRAPI
+###############################################
+
+https://mongodb.com
+
+https://strapi.io/
+
+
+1. create mongodb atlas project and cluster
+2. set admin user for cluster
+3. set ip whitelist
+4. install strapi > npm install -g strapi@3.0.0-alpha.14
+   > npm install -g strapi 
+5. > strapi new server
+installation type                > Custom ( manual settings )
+default databse client           > mongo
+database name                    > server
+host(mongodb cluster connection) > <cluster-name-prefix.mongodb.net>
+srv connection                   > true
+port                             > hit enter
+username (atlas admin username)  > <username>
+password (atlas admin pass)      > <password>
+auth database                    > hit enter
+SSL connection                   > true (y)
+
+###############################################
+        STRAPI CLI
+###############################################
+> strapi new <projectname>
+> starpi help
+
+APi
+
+> strapi generate:api
+
+install plugins
+
+> strapi install graphgl
+> strapi install email
+
+uninstall plugins
+
+> strapi uninstall graphql
+> strapi uninstall email
+
+###############################################
+        WORKING WITH STRAPI
+###############################################
+
+> npm start (for index.html)
+> npm strapi (?)
+
+1. cd server
+2. > npm run develop (to access admin mode)
+3. register super user and login to your admin panel
+4. can add new data types and collections through browser strapi
+5. install graphql througt browser strapi marketplace
+
+graphql access after installation - localhost:1337/graphql
+to perform success queries also need to setup permission for public users at
+strapi -> roles and permissions ->
+"Brand" and "Advanced settings"
+
+then example of query:
+
+query($id: ID!) {
+  brand(id: $id) {
+    _id
+    name
+    description
+    createdAt
+    updatedAt
+    image {
+      name
+      mime
+      url
+    }
+  }
+}
+
+
+{
+  "id": "5de126ee612eef13d43c7352"
+}
+
+###############################################
+        STRAPI & REACT
+###############################################
+
+1. connect strapi to react
+> npm install strapi-sdk-javascript
+2.import Strapi from 'strapi-sdk-javascript/build/main';
+3.set api url
+const apiUrl = process.env.API_URL || "http://localhost:1337";
+4. define strapi
+const strapi = new Strapi(apiUrl);
+5. setup request
+const serverRequest = useCallback(async () => {
+  try {
+    // strapi request schema: method, endpoint, {graphql query}
+    const response = await strapi.request("POST", "/graphql", {
+      data: {
+        query: `
+          query {
+            brands {
+              _id
+              name
+              description              
+              image {                
+                url
+              }
+            }
+          }
+        `
+      }
+    });
+
+    setLoading(false);
+    setBrands(response.data.brands);
+  } catch (err) {
+    console.error(err);
+    setLoading(true);
+  }
+}, [strapi]);
+
+###############################################
+        REACT SPINNERS
+###############################################
+
+https://www.react-spinners.com/
+
+import React from "react";
+import { HashLoader } from "react-spinners";
+import { Box } from "gestalt";
+
+const loader = ({show}) => {
+  return (
+    show && <Box
+      position="fixed"
+      dangerouslySetInlineStyle={{
+        __style: {
+          top: '60%',
+          left: "50%",
+          transform: "translateX(-50%)"
+        }
+      }}
+    >
+      <HashLoader color={"#BD10E0"} size={100} />
+    </Box>
+  );
+};
+
+export default loader;
+
+###############################################
+        STRAPI ADD BREW DETAILS
+###############################################
+
+1.go to admin panel http://localhost:1337/dashboard/
+2.add new content type
+3.set up fileds
+  string - "name"
+  text - "description"
+  media - "image"
+  number - "price" - decimal
+  relation - "Brand has many Brews"
+4. wait for sever to restart
+5. now can add some brew data and select related brand
+6. setup public and auth permissions for that content type
+
+graphql request for Brews array
+query {
+  brews {
+    _id
+    name
+    description
+    price
+    image {
+      name
+      url
+    }
+    createdAt
+    updatedAt
+    brand {
+      _id
+      name
+    }
+  }
+}
+
+graphql request for Brew by id
+query($id: ID!) {
+  brew(id: $id) {
+    _id
+    name
+    description
+    price
+    image {
+      name
+      url
+    }
+    createdAt
+    updatedAt
+    brand {
+      _id
+      name
+    }
+  }
+}
+
+{
+  "id": <brew id>
+}
+
+graphql request for Brews by Brand id
+query($id: ID!) {
+  brand(id: $id) {
+    _id
+    name
+    description
+    image {
+      name
+      url
+    }
+    brews {
+      _id
+      name
+      description
+      image {
+        url
+      }
+      price
+    }
+  }
+}
+
+{
+  "id": <brand id>
+}
+
+###############################################
+  REACT CREATE BRAND DETAILS BREWS
+###############################################
+
+1.create new component Brews
+2.add new route in index.js for a certain brand id details
+3.create new component Brew
+
+###############################################
+  REACT CREATE CART
+###############################################
+
+1. create new component Cart
+2. add functions to add and remove items from cart
+3. add function for counting total
+4. create utils for storing and geting cart items with localStorage
+
+###############################################
+  REACT CREATE SIGNIN / SIGNUP
+###############################################
+
+1. create inputField reusable component /client/src/components/widgets/input/inputField.js
+2. create signin and singup components
+3. init formdata state object in signin(up) components
+4. init states for loading, form validation, form error message
+5. write handle inputs change function
+6. write validation field value function
+7. write handle submit fucntion
+8. write error message handling function
+9. write redirect function
+10. write returning render template
+
+###############################################
+  REACT STRIPE
+###############################################
+
+// off webiste
+http://www.stripe.com/
+// docs
+https://stripe.com/docs/development
+
+1. register
+2. get api public key
+3. > npm install react-stripe-elements
+4. import {
+  Elements,
+  CardElement,
+  StripeProvider,
+  injectStripe
+} from "react-stripe-elements";
+
+5. change component name to _<component name> :
+6. set credit card element at the component :
+{/* stripe Credit Card element */}
+<CardElement id="stripe__input" onReady={input => input.focus()} />
+7. create stripe hoc component :
+const CheckoutForm = injectStripe(_checkoutForm);
+8. create stripe stripe provider component :
+const checkout = () => {
+  <StripeProvider apiKey="pk_test_xaTIuQ3FvjNLtBmR3tKRr3d4">
+    <Elements>
+      <CheckoutForm />
+    </Elements>
+  </StripeProvider>;
+};
+9. update /client/public/index.html with new <script></script> :
+<script id="stripe-js" src="https://js.stripe.com/v3/"></script>
+<title>React App</title>
+
+###############################################
+  STRAPI ORDER
+###############################################
+0. cd /server > npm install stripe --save
+1. create new content type ORDER in browser Strapi CMS admin panel
+2. set fields : 
+    brews - JSON - required
+    city - string - required
+    address - string - required
+    postalCode - string -required
+    amount - number (decimal) -required
+3. save new content type and wait for restart
+4. set auth user permissions to create orders
+5. go to /server/api/orders/controllers/Orders.js and update.
+6. go to /server/api/orders/services/Orders.js and update.
+7. update /client/src/components/orders/checkout.js
+
+
+# /server/api/orders/controllers/Orders.js : 
+const stripe = require("stripe")("<stripe_secret_key>");
+...
+module.exports = {
+  create: async (ctx, next) => {
+    try {
+      const {
+        city,
+        postalCode,
+        address,
+        amount,
+        brews,
+        token
+      } = ctx.request.body;
+
+      // send charge to stripe
+      const charge = await stripe.charges.create({
+        amount: amount * 100,
+        currency: "usd",
+        description: `Order ${new Date()} - User ${ctx.state.user._id}`,
+        source: token
+      });
+
+      const order = await Order.create({
+        user: ctx.state.user._id,
+        address,
+        amount,
+        postalCode,
+        brews,
+        city
+      });
+
+      ctx.body = "ok";
+      ctx.send({ order });
+    } catch (err) {
+      ctx.body = err;
+    }
+  }
+}
+
+# /server/api/orders/services/Orders.js :
+module.exports = {
+  create: async (data) => {
+    const entry = await strapi.query("order").create(data);    
+
+    entry.save();
+
+    return entry;
+  }
+};
+
+# /client/src/components/orders/checkout.js :
+...
+import Strapi from "strapi-sdk-javascript/build/main";
+const apiUrl = process.env.API_URL || "http://localhost:1337";
+const strapi = new Strapi(apiUrl);
+...
+const _checkoutForm = props => {
+  ...
+  const handleSubmitOrder = async () => {
+    const address = formData[0].value;
+    const postalCode = formData[1].value;
+    const city = formData[2].value;
+
+    const amount = calcAmount(cartItems);
+    // console.log(amount)
+    /* preparations */
+    setOrderProcessing(true);
+
+    try {
+      // steps
+      // create stripe token
+      // create order with strapi sdk (request to backend)
+      // orderProcessing - false, showModal - false
+      // clear user cart
+      // show success toast
+
+      // stripe is added to component be stripe elements
+      // console.log(props.stripe);
+      // https://stripe.com/docs/stripe-js/reference
+      // stripe.createToken('bank_account', bankAccountData)
+      const response = await props.stripe.createToken();
+      // console.log(response);
+      // token = response.token.id;
+      // console.log(token);
+
+      await strapi.createEntry("orders", {
+        amount,
+        brews: cartItems,
+        city,
+        postalCode,
+        address,
+        token: response.token.id
+      });
+
+      setOrderProcessing(false);
+      setShowModal(false);
+      clearCart();
+
+      showToast("Your order has been successfully submitted!", true);
+    } catch (err) {
+      // orderProcessing - false, showModal - false
+      // show error toast
+      setOrderProcessing(false);
+      setShowModal(false);
+      showToast(err.message, false);
+    }
+  };
+  ...
+}
+
+const CheckoutForm = withRouter(injectStripe(_checkoutForm));
+
+const checkout = () => {
+  return (
+    <StripeProvider apiKey="pk_test_xaTIuQ3FvjNLtBmR3tKRr3d4">
+      <Elements>
+        <CheckoutForm />
+      </Elements>
+    </StripeProvider>
+  );
+};
+
+export default checkout;
+
+###############################################
+  STRAPI AND SENDGRID EMAILS
+###############################################
+1. cd /server > npm install strapi-provider-email-sendgrid --save
+2. go to Strapi CMS browser http://localhost:1337/dashboard/list-plugins
+and select > email settings > provider > sendgrid
+3. go to sendgrid.com > create new apiKey
+4. grab sendgrid apiKey and paste it to the strapi cms browser email settings
+5. setup "Sendgrid Default From" email address
+6. setup "Sendgrid Default Reply-To" email address
+
+7. create folder /server/providers 
+8. download sendgrid package
+https://github.com/strapi/strapi/tree/master/packages/strapi-provider-email-sendgrid
+
+9. put package at /server/providers/strapi-provider-email-sendgrid
+10. update /server/package.json :
+{
+  ...
+  "dependencies": {
+    ...
+    "strapi-provider-email-sendgrid": "file:providers/strapi-provider-email-sendgrid",
+    ...
+  },
+  ...
+}
+
+11. cd /server > run npm install
+
+12. add send mail function to front-end:
+/client/src/components/orders/checkout.js :
+...
+import Strapi from "strapi-sdk-javascript/build/main";
+const apiUrl = process.env.API_URL || "http://localhost:1337";
+const strapi = new Strapi(apiUrl);
+...
+const handleSubmitOrder = async () => {
+    const address = formData[0].value;
+    const postalCode = formData[1].value;
+    const city = formData[2].value;
+    const confirmationEmailAddress = formData[3].value;
+
+    const amount = calcAmount(cartItems);    
+    /* preparations */
+    setOrderProcessing(true);
+
+    try {      
+      const response = await props.stripe.createToken();      
+
+      await strapi.createEntry("orders", {
+        amount,
+        brews: cartItems,
+        city,
+        postalCode,
+        address,
+        token: response.token.id
+      });
+
+      // send email with strapi
+      await strapi.request('POST', '/email', {
+        data: {
+          to: confirmationEmailAddress,
+          subject: `Order confirmation OnlineStore - ${new Date(Date.now())}`,
+          text: 'Your order has been processed',
+          html: `<p><bold>Expect Your order to arrive in 2-3 shipping days</bold></p>`
+        }
+      })
+
+      setOrderProcessing(false);
+      setShowModal(false);
+      clearCart();
+
+      showToast("Your order has been successfully submitted!", true);
+    } catch (err) {      
+      setOrderProcessing(false);
+      setShowModal(false);
+      showToast(err.message, false);
+    }
+  };
+...
+
+###############################################
+  STRAPI && GRAPHQL ADVANCED SEARCH TECHNICS
+###############################################
+
+https://graphql.org/learn/queries/#variables
+
+using
+(where: { <field_name>_contains: "${searchCriteria}" })
+
+steps
+1. handle search field change
+2. change value for searchCriteria
+3. define component effects for searchCriteria changes
+4. define callback for new searchCriteria to change brands array
+5. render brands array
+
+1.
+<SearchField
+  id="searchField"
+  accessibilityLabel="Brand Search Field"
+  placeholder="search Brands"
+  value={searchCriteria}
+  onChange={event => handleSearch(event)}
+/>
+
+2. 
+const handleSearch = ({ value }) => {
+  if (value.length) {
+    setSearchCriteria(value);
+  } else {
+    setSearchCriteria("");
+  }
+
+  setLoading(true);
+};
+
+3. 
+useEffect(() => {
+  let mount = true;
+
+  if (mount && loading && !searchCriteria.length) {
+    serverRequest();
+  }
+
+  if (mount && loading && searchCriteria.length) {
+    handleGraphQLSearchBrands();
+  }
+
+  return () => {
+    mount = false;
+  };
+}, [serverRequest, loading, handleGraphQLSearchBrands]);
+
+4.
+const handleGraphQLSearchBrands = useCallback(async () => {
+  try {
+    const response = await strapi.request("POST", "/graphql", {
+      data: {
+        query: `query {
+                  brands(where: { name_contains: "${searchCriteria}" }) {
+                    _id
+                    name
+                    description
+                    image {
+                      url
+                    }
+                  }
+                }
+              `
+      }
+    });
+
+    setLoading(false);
+    setBrands(response.data.brands);
+  } catch (err) {
+    console.error(err);
+    setLoading(true);
+  }
+}, [searchCriteria]);
+
+5.
+{!loading && renderBrands()}
+
+###############################################
+  STRIPE CARD ELEMENT VALIDATION
+###############################################
+
+https://stripe.dev/react-stripe-elements/
+
+import React, { useState } from "react";
+import { Box, Label, Text, Icon } from "gestalt";
+import { CardElement } from "react-stripe-elements";
+import './card.css';
+
+const card = ({ changeValidation }) => {
+  const [edited, setEdited] = useState(false);
+  const [validationStatus, setValidationStatus] = useState(false);
+  const [validationMessage, setValidationMessage] = useState("");
+
+  const handleCardChange = async ({ empty, complete, error }) => {
+    if (!error && complete && !empty) {
+      setEdited(true);
+      setValidationStatus(true);
+      setValidationMessage("");
+      changeValidation(true);
+    } else if (!error && !complete && empty) {
+      setEdited(false);
+      setValidationStatus(false);
+      setValidationMessage("Please fill up all field");
+      changeValidation(false);
+    } else if (!error && !complete && !empty) {
+      setEdited(true);
+      setValidationStatus(false);
+      setValidationMessage("Please fill up all field");
+      changeValidation(false);
+    } else if (error) {
+      setEdited(true);
+      setValidationStatus(false);
+      setValidationMessage(error);
+      changeValidation(false);
+    }
+
+    return;
+  };
+
+  const renderError = () => {
+    return (
+      <Box marginBottom={2}>
+        <Label htmlFor="stripe__input">
+          <Text color="red">{validationMessage}</Text>
+        </Label>
+      </Box>
+    );
+  };
+
+  const renderIcons = () => {
+    if (!edited) {
+      return (
+        <Icon
+          accessibilityLabel="pending"
+          color="olive"
+          icon="clock"
+          size={20}
+        />
+      );
+    }
+
+    if (validationStatus && edited) {
+      return (
+        <Icon
+          accessibilityLabel="valid"
+          color="green"
+          icon="check-circle"
+          size={20}
+        />
+      );
+    }
+
+    if (!validationStatus && edited) {
+      return (
+        <Icon accessibilityLabel="invalid" color="red" icon="clear" size={20} />
+      );
+    }
+  };
+
+  return (
+    <Box
+      display="flex"
+      direction="column"
+      justifyContent="center"
+      alignItems="start"
+    >
+      {!validationStatus && validationMessage.length ? renderError() : null}
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="between"
+        width="100%"
+      >
+        <CardElement
+          id="stripe__input"
+          onChange={event => handleCardChange(event)}
+          onReady={input => input.focus()}
+        />
+        {renderIcons()}
+      </Box>
+    </Box>
+  );
+};
+
+export default card;

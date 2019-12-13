@@ -1,0 +1,20 @@
+{
+  "defaultConnection": "default",
+  "connections": {
+    "default": {
+      "connector": "strapi-hook-mongoose",
+      "settings": {
+        "database": "server",
+        "host": "graphql-stripe-5lfmv.mongodb.net",
+        "srv": "true",
+        "port": 27017,
+        "username": "mmstar",
+        "password": "4ebyrawka"
+      },
+      "options": {
+        "authenticationDatabase": "",
+        "ssl": true
+      }
+    }
+  }
+}

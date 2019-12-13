@@ -1,0 +1,24 @@
+.inputField {
+    outline: none;
+    padding: 12px;
+    width: 80%;
+    border: 0;
+    border-radius: 4px;
+    margin: 4px 0;
+    filter: drop-shadow(2px 2px 2px);
+    font-size: large;
+    border-bottom: 2px solid transparent;
+}
+
+.valid {
+    background-color: springgreen ;
+}
+
+.invalid {
+    background-color: lightcoral ;
+}
+
+.inputField:hover, .inputField:focus {
+    background-color: white;
+    border-bottom: 2px solid cyan;
+}

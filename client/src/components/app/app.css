@@ -1,0 +1,32 @@
+/* .app {
+  text-align: center;
+} */
+
+
+/* links */
+
+a, a:link, a:visited {
+  text-decoration: none;
+}
+
+.active {
+  filter: drop-shadow(2px 2px 2px cyan);
+  border-bottom: 2px solid cyan;
+}
+
+.home-active {
+  filter: drop-shadow(2px 2px 2px cyan);
+  border-bottom: 2px solid transparent;
+}
+
+.home-link {
+  display: block;
+  text-align: center;
+  margin: 4px;
+  border-bottom: 2px solid transparent;
+}
+
+.navlink {
+  margin: 0 4px;
+  padding: 16px;
+}
