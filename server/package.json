@@ -11,7 +11,7 @@
   },
   "devDependencies": {},
   "dependencies": {
-    "strapi": "3.0.0-beta.17.6",
+    "strapi": "3.6.11",
     "strapi-admin": "3.0.0-beta.17.6",
     "strapi-hook-mongoose": "3.0.0-beta.17.6",
     "strapi-plugin-content-manager": "3.0.0-beta.17.6",
@@ -19,7 +19,7 @@
     "strapi-plugin-email": "3.0.0-beta.17.6",
     "strapi-plugin-graphql": "3.0.0-beta.17.6",
     "strapi-plugin-upload": "3.0.0-beta.17.6",
-    "strapi-plugin-users-permissions": "3.0.0-beta.17.6",
+    "strapi-plugin-users-permissions": "3.6.11",
     "strapi-provider-email-sendgrid": "file:providers/strapi-provider-email-sendgrid",
     "strapi-utils": "3.0.0-beta.17.6",
     "stripe": "^7.14.0"
